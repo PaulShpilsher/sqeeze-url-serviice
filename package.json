@@ -9,6 +9,7 @@
   "scripts": {
     "lint": "eslint . --ext .ts",
     "build": "./node_modules/typescript/bin/tsc",
+    "watch": "./node_modules/typescript/bin/tsc -w",
     "dev": "nodemon ./src/index.ts",
     "start": "ts-node ./src/index.ts",
     "test": "jest"
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@types/jest": "^29.2.5",
     "@types/koa": "^2.13.5",
+    "@types/koa-bodyparser": "^4.3.10",
     "@types/koa-json": "^2.0.20",
     "@types/koa-logger": "^3.1.2",
     "@types/koa-router": "^7.4.4",
