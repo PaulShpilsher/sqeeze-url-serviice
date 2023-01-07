@@ -1,0 +1,27 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+      "target": "ES2018",
+      "module": "commonjs",
+      "lib": ["esnext"],
+      "moduleResolution": "node",
+      "rootDir": "./src",
+      "outDir": "./dist",
+      "baseUrl": ".",
+      "strict": false,
+      "allowJs": true,
+      "sourceMap": true,
+      "esModuleInterop": true,
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "strictNullChecks": true,
+      "resolveJsonModule": true
+    },
+    "include": [
+      "./src/**/*"
+    ],
+    "exclude": [
+      "./node_modules",
+      "./src/**/*.spec.*"
+    ]
+  }
