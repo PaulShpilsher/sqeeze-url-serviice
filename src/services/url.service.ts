@@ -2,10 +2,10 @@ import { UserUrl } from "@prisma/client";
 import {
   addShortUrl,
   findByShortUrlCode,
+  incrementAccessCount,
 } from "../repositories/url.repository";
 import { generateShortCode } from "./short-code-generator.service";
 import { ServiceError } from "../types/service-error";
-
 
 const submitUserDefineddUrlCode = async (
   longUrl: string,
@@ -38,7 +38,6 @@ const submitGeneratedUrlCode = async (longUrl: string) => {
   throw new ServiceError("Unable to generate unique code", 500);
 };
 
-
 export const submitUrlService = async (
   longUrl: string,
   shortUrlCode?: string
@@ -64,5 +63,6 @@ export const getLongUrlService = async (shortUrlCode: string) => {
   if (!userUrl) {
     throw new ServiceError("Invalid short url code", 404);
   }
+  await incrementAccessCount(userUrl.id);
   return userUrl.longUrl;
 };

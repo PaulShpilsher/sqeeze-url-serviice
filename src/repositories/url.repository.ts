@@ -22,7 +22,7 @@ export const addShortUrl = async (
     const userUrl = await prisma.userUrl.create({
       data: {
         longUrl,
-        shortUrlCode
+        shortUrlCode,
       },
     });
     console.log("UserUrl", userUrl);
@@ -38,4 +38,11 @@ export const addShortUrl = async (
     }
     throw e;
   }
+};
+
+export const incrementAccessCount = async (id: number) => {
+  return await prisma.userUrl.update({
+    where: { id },
+    data: { accessCount: { increment: 1 } },
+  });
 };
