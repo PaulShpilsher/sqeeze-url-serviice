@@ -14,5 +14,4 @@ model UserUrl {
   id           Int    @id @default(autoincrement())
   longUrl      String
   shortUrlCode String @unique
-  shortUrl     String
 }

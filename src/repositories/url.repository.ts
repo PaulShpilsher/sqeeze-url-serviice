@@ -2,17 +2,27 @@ import { Prisma, PrismaClient, UserUrl } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+export const findByShortUrlCode = async (
+  shortUrlCode: string
+): Promise<UserUrl | null> => {
+  return await prisma.userUrl.findUnique({
+    where: { shortUrlCode },
+  });
+};
+
 export const addShortUrl = async (
   longUrl: string,
-  shortUrl: string,
   shortUrlCode: string
 ): Promise<UserUrl | null> => {
   try {
+    await prisma.userUrl.findUnique({
+      where: { shortUrlCode },
+    });
+
     const userUrl = await prisma.userUrl.create({
       data: {
         longUrl,
-        shortUrlCode,
-        shortUrl,
+        shortUrlCode
       },
     });
     console.log("UserUrl", userUrl);
