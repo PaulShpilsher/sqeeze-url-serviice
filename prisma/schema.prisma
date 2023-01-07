@@ -11,7 +11,8 @@ datasource db {
 }
 
 model UserUrl {
-  id             Int    @id @default(autoincrement())
-  longUrl        String @unique
-  short_url_code String @unique
+  id           Int    @id @default(autoincrement())
+  longUrl      String
+  shortUrlCode String @unique
+  shortUrl     String
 }
