@@ -61,7 +61,7 @@ export const getLongUrlService = async (shortUrlCode: string) => {
 
   const userUrl = await findByShortUrlCode(shortUrlCode);
   if (!userUrl) {
-    throw new ServiceError("Invalid short url code", 404);
+    throw new ServiceError(`Invalid short url code "${shortUrlCode}"`, 404);
   }
   await incrementAccessCount(userUrl.id);
   return userUrl.longUrl;
