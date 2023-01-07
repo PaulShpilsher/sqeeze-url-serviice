@@ -34,5 +34,5 @@ export const submitUrlService = async (model: SubmitRequest) => {
     while(!userUrl);
   }
 
-  return userUrl;
+  return userUrl.shortUrlCode;
 };
