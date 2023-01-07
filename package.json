@@ -12,14 +12,18 @@
     "build:watch": "npm run build -- -w",
     "dev": "nodemon ./src/index.ts",
     "start": "ts-node ./src/index.ts",
-    "test": "jest"
+    "test": "jest",
+    "db:migrate": "npx prisma migrate dev",
+    "db:build": "prisma generate && prisma migrate deploy"
   },
   "dependencies": {
+    "@prisma/client": "^4.8.1",
     "koa": "^2.14.1",
     "koa-bodyparser": "^4.3.0",
     "koa-json": "^2.0.2",
     "koa-logger": "^3.2.1",
-    "koa-router": "^12.0.0"
+    "koa-router": "^12.0.0",
+    "prisma": "^4.8.1"
   },
   "devDependencies": {
     "@types/jest": "^29.2.5",
