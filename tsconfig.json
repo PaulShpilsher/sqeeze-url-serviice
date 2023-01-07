@@ -1,4 +1,4 @@
-{
+{  
     "compileOnSave": false,
     "compilerOptions": {
       "target": "es2021",
@@ -8,14 +8,15 @@
       "rootDir": "./src",
       "outDir": "./dist",
       "baseUrl": ".",
-      "strict": false,
+      "strict": true,
       "allowJs": true,
       "sourceMap": true,
       "esModuleInterop": true,
       "experimentalDecorators": true,
       "emitDecoratorMetadata": true,
       "strictNullChecks": true,
-      "resolveJsonModule": true
+      "resolveJsonModule": true,
+      "forceConsistentCasingInFileNames": true
     },
     "include": [
       "./src/**/*"
