@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "eslint . --ext .ts",
     "build": "./node_modules/typescript/bin/tsc",
-    "watch": "./node_modules/typescript/bin/tsc -w",
+    "build:watch": "npm run build -- -w",
     "dev": "nodemon ./src/index.ts",
     "start": "ts-node ./src/index.ts",
     "test": "jest"
