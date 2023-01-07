@@ -1,3 +1,4 @@
+import { redirectUrlController } from './controllers/url.controller';
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -9,16 +10,16 @@ import logger from "koa-logger";
 import bodyParser from "koa-bodyparser";
 import { submitUrlController } from "./controllers/url.controller";
 
-const app = new Koa();
-const router = new Router();
 
-router.get("/health", async (ctx, next) => {
-  ctx.body = { status: 'OK' };
+const router = new Router();
+router.get('/',async (ctx, next) => {
+  ctx.body = "Welcome";
   await next();
 });
+router.get('/:shortUrlCode', redirectUrlController);
+router.post('/submit', submitUrlController);
 
-router.post("/submit", submitUrlController);
-
+const app = new Koa();
 app.use(json()).use(logger()).use(bodyParser());
 app.use(router.routes()).use(router.allowedMethods());
 
