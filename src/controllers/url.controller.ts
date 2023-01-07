@@ -5,6 +5,7 @@ import { submitUrlService } from "../services/url.service";
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import Koa from "koa";
 import { SubmitRequest } from "../model/submit-request";
+import url from 'node:url';
 
 const onError = (ctx: any, e: ServiceError | Error | unknown) => {
   let errorDetails: string;
@@ -24,18 +25,27 @@ const onError = (ctx: any, e: ServiceError | Error | unknown) => {
 };
 
 export const submitUrlController = async (ctx: any, next: Koa.Next) => {
-  console.log(JSON.stringify(ctx));
+    // console.log('ctx.request.protocol', ctx.request.protocol)
+    // console.log('ctx.request.headers.host', ctx.request.headers.host)
+    //console.log(JSON.stringify(ctx));
 
-  // TODO: add validation
-  const payload = ctx.request.body as SubmitRequest;
-  try {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    // console.log( ctx.req );
+
+   // TODO: add validation
+   try {
+    const payload = ctx.request.body as SubmitRequest;
     const shortUrlCode = await submitUrlService(
       payload.longUrl,
       payload.shortUrlCode
     );
+    const shortUrl = new url.URL(
+        shortUrlCode,
+        `${ctx.request.protocol as string}://${ctx.request.headers.host as string}`);
+
     const result: SubmitResponse = {
       shortUrlCode,
-      shortUrl: ''
+      shortUrl: shortUrl.href
     };
     ctx.body = result;
     await next();
