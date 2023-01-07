@@ -1,3 +1,4 @@
+import { SubmitResponse } from "./../model/submit-response";
 import { ServiceError } from "./../types/service-error";
 import { submitUrlService } from "../services/url.service";
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -23,14 +24,20 @@ const onError = (ctx: any, e: ServiceError | Error | unknown) => {
 };
 
 export const submitUrlController = async (ctx: any, next: Koa.Next) => {
+  console.log(JSON.stringify(ctx));
+
   // TODO: add validation
   const payload = ctx.request.body as SubmitRequest;
   try {
-    const shortUrlCode = submitUrlService(payload);
-    ctx.body = {
+    const shortUrlCode = await submitUrlService(
+      payload.longUrl,
+      payload.shortUrlCode
+    );
+    const result: SubmitResponse = {
       shortUrlCode,
+      shortUrl: ''
     };
-    // ctx.response.status = 201;
+    ctx.body = result;
     await next();
   } catch (e) {
     onError(ctx, e);
