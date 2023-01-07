@@ -1,10 +1,12 @@
-import { customAlphabet } from "nanoid/async";
-
-const alphanumeric =
+const alphabet =
   "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const size = 6;
 
-const nanoid = customAlphabet(alphanumeric as string, 6);
-
-export const generateShortCode = async (): Promise<string> => {
-  return await nanoid();
+export const generateShortCode = (): string => {
+  let result = "";
+  for (let i = 0; i < size; ++i) {
+    const index = Math.floor(Math.random() * alphabet.length);
+    result += alphabet[index];
+  }
+  return result;
 };

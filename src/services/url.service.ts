@@ -40,7 +40,7 @@ const submitUserDefineddUrlCode = async (
 
 const submitGeneratedUrlCode = async (longUrl: string) => {
   for (let retries = 0; retries < 100; ++retries) {
-    const shortUrlCode: string = await generateShortCode();
+    const shortUrlCode: string = generateShortCode();
     const userUrl: UserUrl | null = await addShortUrl(longUrl, shortUrlCode);
     if (userUrl != null) {
       console.info(`Generated short URL code in ${retries + 1} try(s)`);
