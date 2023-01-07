@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -6,21 +7,17 @@ import Router from "koa-router";
 import json from "koa-json";
 import logger from "koa-logger";
 import bodyParser from "koa-bodyparser";
-import { SubnitRequest } from "./types/submit.request";
+import { submitUrlController } from "./controllers/url.controller";
 
 const app = new Koa();
 const router = new Router();
 
 router.get("/health", async (ctx, next) => {
-  ctx.body = { status: "Running" };
+  ctx.body = { status: 'OK' };
   await next();
 });
 
-router.post("/submit", async (ctx, next) => {
-  const { url } = ctx.request.body as SubnitRequest;
-  ctx.body = { msg: 'req', url: url };
-  await next();
-});
+router.post("/submit", submitUrlController);
 
 app.use(json()).use(logger()).use(bodyParser());
 app.use(router.routes()).use(router.allowedMethods());
