@@ -10,6 +10,7 @@ import { submitUrlService } from "../services/url.service";
 import { SubmitRequest } from "../model/submit-request";
 import { StatsResponse } from "../model/stats-response";
 
+// TODO: refactor - put error handling in middleware
 const onError = (ctx: any, e: ServiceError | Error | unknown) => {
   let errorDetails: string;
   let status: number;
@@ -27,13 +28,6 @@ const onError = (ctx: any, e: ServiceError | Error | unknown) => {
 };
 
 export const submitUrlController = async (ctx: any, next: Koa.Next) => {
-  // console.log('ctx.request.protocol', ctx.request.protocol)
-  // console.log('ctx.request.headers.host', ctx.request.headers.host)
-  //console.log(JSON.stringify(ctx));
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-  // console.log( ctx.req );
-
   // TODO: add validation
   try {
     const payload = ctx.request.body as SubmitRequest;
@@ -60,12 +54,14 @@ export const submitUrlController = async (ctx: any, next: Koa.Next) => {
 };
 
 export const redirectUrlController = async (ctx: any) => {
-  console.log(JSON.stringify(ctx));
-
   try {
     const { shortUrlCode } = ctx.params as { shortUrlCode: string };
     const longUrl = await getLongUrlService(shortUrlCode);
+
+    // TODO: aggregate user parameters and query string, user/password, and such
     const newUrl = url.parse(longUrl);
+
+    // redirect
     ctx.status=301;
     ctx.redirect(newUrl.href);
   } catch (e) { 
