@@ -1,11 +1,13 @@
 import { UserUrl } from "@prisma/client";
 import {
-  addShortUrl,
-  addUrlAccessToHistory,
-  findByShortUrlCode,
+  createUserUrl,
+  createUrlAccessHistory,
+  getUserUrlByShortUrlCode,
+  getUserUrlStatsByShortUrlCode,
 } from "../repositories/url.repository";
 import { generateShortCode } from "./short-code-generator.service";
 import { ServiceError } from "../types/service-error";
+import { StatsResponse } from "../model/stats-response";
 
 const submitUserDefineddUrlCode = async (
   longUrl: string,
@@ -18,7 +20,7 @@ const submitUserDefineddUrlCode = async (
     );
   }
 
-  const userUrl: UserUrl | null = await addShortUrl(longUrl, shortUrlCode);
+  const userUrl: UserUrl | null = await createUserUrl(longUrl, shortUrlCode);
   if (!userUrl) {
     throw new ServiceError("Short code already exists", 400);
   }
@@ -29,7 +31,7 @@ const submitUserDefineddUrlCode = async (
 const submitGeneratedUrlCode = async (longUrl: string) => {
   for (let retries = 0; retries < 100; ++retries) {
     const shortUrlCode: string = generateShortCode();
-    const userUrl: UserUrl | null = await addShortUrl(longUrl, shortUrlCode);
+    const userUrl: UserUrl | null = await createUserUrl(longUrl, shortUrlCode);
     if (userUrl != null) {
       console.info(`Generated short URL code in ${retries + 1} try(s)`);
       return userUrl.shortUrlCode;
@@ -59,22 +61,28 @@ export const getLongUrlService = async (shortUrlCode: string): Promise<string> =
     throw new ServiceError("Missing short URL code", 400);
   }
 
-  const userUrl = await findByShortUrlCode(shortUrlCode);
+  const userUrl = await getUserUrlByShortUrlCode(shortUrlCode);
   if (!userUrl) {
     throw new ServiceError(`Invalid short url code "${shortUrlCode}"`, 404);
   }
-  await addUrlAccessToHistory(userUrl.id, 'some client');
+  await createUrlAccessHistory(userUrl.id, 'some client');
   return userUrl.longUrl;
 };
 
-export const getUrlStatsService = async (shortUrlCode: string): Promise<number> => {
+export const getUrlStatsService = async (shortUrlCode: string): Promise<StatsResponse> => {
   if (!shortUrlCode) {
     throw new ServiceError("Missing short URL code", 400);
   }
 
-  const userUrl = await findByShortUrlCode(shortUrlCode);
-  if (!userUrl) {
+  const stats = await getUserUrlStatsByShortUrlCode(shortUrlCode);
+  if (!stats) {
     throw new ServiceError(`Invalid short url code "${shortUrlCode}"`, 404);
   }
-  return 1;
+
+  const result: StatsResponse = {
+    registeredAt: stats.createdAt.toISOString(),
+    accessedLastAt: stats.accessHistory.length ? stats.accessHistory[0].accessedAt.toISOString() : '',
+    accessedCount: stats._count.accessHistory
+  };
+  return result;
 };

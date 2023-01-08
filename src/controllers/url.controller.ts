@@ -73,16 +73,10 @@ export const redirectUrlController = async (ctx: any) => {
   }
 };
 
-
 export const getUrlStatsController = async (ctx: any, next: Koa.Next) => {
   try {
     const { shortUrlCode } = ctx.params as { shortUrlCode: string };
-    const accessCount = await getUrlStatsService(shortUrlCode);
-    const result: StatsResponse = {
-      registeredAt: Date.now().toString(),
-      accessedLastAt: Date.now().toString(),
-      accessedCount: accessCount
-    };
+    const result: StatsResponse = await getUrlStatsService(shortUrlCode);
     ctx.body = result;
     await next();
   } catch (e) { 
