@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "UrlAccessHistory" ALTER COLUMN "accessedAt" SET DEFAULT CURRENT_TIMESTAMP;

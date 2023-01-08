@@ -1,8 +1,8 @@
 import { UserUrl } from "@prisma/client";
 import {
   addShortUrl,
+  addUrlAccessToHistory,
   findByShortUrlCode,
-  incrementAccessCount,
 } from "../repositories/url.repository";
 import { generateShortCode } from "./short-code-generator.service";
 import { ServiceError } from "../types/service-error";
@@ -54,7 +54,7 @@ export const submitUrlService = async (
   }
 };
 
-export const getLongUrlService = async (shortUrlCode: string) => {
+export const getLongUrlService = async (shortUrlCode: string): Promise<string> => {
   if (!shortUrlCode) {
     throw new ServiceError("Missing short URL code", 400);
   }
@@ -63,6 +63,18 @@ export const getLongUrlService = async (shortUrlCode: string) => {
   if (!userUrl) {
     throw new ServiceError(`Invalid short url code "${shortUrlCode}"`, 404);
   }
-  await incrementAccessCount(userUrl.id);
+  await addUrlAccessToHistory(userUrl.id, 'some client');
   return userUrl.longUrl;
+};
+
+export const getUrlStatsService = async (shortUrlCode: string): Promise<number> => {
+  if (!shortUrlCode) {
+    throw new ServiceError("Missing short URL code", 400);
+  }
+
+  const userUrl = await findByShortUrlCode(shortUrlCode);
+  if (!userUrl) {
+    throw new ServiceError(`Invalid short url code "${shortUrlCode}"`, 404);
+  }
+  return 1;
 };

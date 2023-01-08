@@ -1,4 +1,4 @@
-import { redirectUrlController } from './controllers/url.controller';
+import { getUrlStatsController, redirectUrlController } from './controllers/url.controller';
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -17,6 +17,7 @@ router.get('/',async (ctx, next) => {
   await next();
 });
 router.get('/:shortUrlCode', redirectUrlController);
+router.get('/:shortUrlCode/stats', getUrlStatsController);
 router.post('/submit', submitUrlController);
 
 const app = new Koa();

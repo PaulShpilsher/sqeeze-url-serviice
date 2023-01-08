@@ -15,10 +15,6 @@ export const addShortUrl = async (
   shortUrlCode: string
 ): Promise<UserUrl | null> => {
   try {
-    await prisma.userUrl.findUnique({
-      where: { shortUrlCode },
-    });
-
     const userUrl = await prisma.userUrl.create({
       data: {
         longUrl,
@@ -40,9 +36,14 @@ export const addShortUrl = async (
   }
 };
 
-export const incrementAccessCount = async (id: number) => {
-  return await prisma.userUrl.update({
-    where: { id },
-    data: { accessCount: { increment: 1 } },
+export const addUrlAccessToHistory = async (
+  userUrlId: number,
+  accessedBy: string
+) => {
+  await prisma.urlAccessHistory.create({
+    data: {
+      userUrlId,
+      accessedBy,
+    },
   });
 };

@@ -1,21 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { getLongUrlService } from "./../services/url.service";
-import { SubmitResponse } from "./../model/submit-response";
+import Koa from "koa";
+import url from "node:url";
+import { getLongUrlService, getUrlStatsService } from "./../services/url.service";
+import { SubmitResponse } from "../model/submit-response";
 import { ServiceError } from "./../types/service-error";
 import { submitUrlService } from "../services/url.service";
-
-import Koa from "koa";
 import { SubmitRequest } from "../model/submit-request";
-import url from "node:url";
+import { StatsResponse } from "../model/stats-response";
 
 const onError = (ctx: any, e: ServiceError | Error | unknown) => {
   let errorDetails: string;
   let status: number;
   if (e instanceof ServiceError) {
     errorDetails = e.toString();
-    console.error("Service error", errorDetails);
     status = e.code;
   } else {
     errorDetails = JSON.stringify(e, undefined, 2);
@@ -61,12 +60,31 @@ export const submitUrlController = async (ctx: any, next: Koa.Next) => {
 };
 
 export const redirectUrlController = async (ctx: any) => {
+  console.log(JSON.stringify(ctx));
+
   try {
     const { shortUrlCode } = ctx.params as { shortUrlCode: string };
     const longUrl = await getLongUrlService(shortUrlCode);
     const newUrl = url.parse(longUrl);
     ctx.status=301;
     ctx.redirect(newUrl.href);
+  } catch (e) { 
+    onError(ctx, e);
+  }
+};
+
+
+export const getUrlStatsController = async (ctx: any, next: Koa.Next) => {
+  try {
+    const { shortUrlCode } = ctx.params as { shortUrlCode: string };
+    const accessCount = await getUrlStatsService(shortUrlCode);
+    const result: StatsResponse = {
+      registeredAt: Date.now().toString(),
+      accessedLastAt: Date.now().toString(),
+      accessedCount: accessCount
+    };
+    ctx.body = result;
+    await next();
   } catch (e) { 
     onError(ctx, e);
   }
