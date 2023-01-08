@@ -8,12 +8,3 @@ psql -c 'CREATE DATABASE "sqeeze-url-data"
     ENCODING = 'UTF8'
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;'
-
-
-CREATE TABLE IF NOT EXISTS public.url
-(
-    id integer NOT NULL PRIMARY KEY,
-    short_url character varying(20) UNIQUE NOT NULL,
-    long_url character varying(128) UNIQUE NOT NULL,
-    
-)
