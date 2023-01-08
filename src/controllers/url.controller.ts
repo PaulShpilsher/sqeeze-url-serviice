@@ -21,7 +21,7 @@ const onError = (ctx: any, e: ServiceError | Error | unknown) => {
     ctx.body = "Server error";
     status = 500;
   }
-  console.error("Server error", errorDetails);
+  console.error("Server error", errorDetails, e);
   ctx.body = errorDetails;
   ctx.response.status = status;
 };
