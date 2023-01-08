@@ -58,6 +58,7 @@ export const getUserUrlStatsByShortUrlCode = async (
         select: { accessHistory: true },
       },
       accessHistory: {
+        select: { accessedAt: true },
         orderBy: {
           accessedAt: 'desc',
         },
