@@ -11,7 +11,17 @@ datasource db {
 }
 
 model UserUrl {
-  id           Int    @id @default(autoincrement())
-  longUrl      String
-  shortUrlCode String @unique
+  id            Int                @id @default(autoincrement())
+  longUrl       String
+  shortUrlCode  String             @unique
+  createdAt     DateTime           @default(now())
+  accessHistory UrlAccessHistory[]
+}
+
+model UrlAccessHistory {
+  id         Int      @id @default(autoincrement())
+  userUrlId  Int
+  userUrl    UserUrl  @relation(fields: [userUrlId], references: [id])
+  accessedAt DateTime @default(now())
+  accessedBy String
 }

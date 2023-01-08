@@ -2,7 +2,7 @@ import { Prisma, PrismaClient, UserUrl } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const findByShortUrlCode = async (
+export const getUserUrlByShortUrlCode = async (
   shortUrlCode: string
 ): Promise<UserUrl | null> => {
   return await prisma.userUrl.findUnique({
@@ -10,22 +10,18 @@ export const findByShortUrlCode = async (
   });
 };
 
-export const addShortUrl = async (
+export const createUserUrl = async (
   longUrl: string,
   shortUrlCode: string
 ): Promise<UserUrl | null> => {
   try {
-    await prisma.userUrl.findUnique({
-      where: { shortUrlCode },
-    });
-
     const userUrl = await prisma.userUrl.create({
       data: {
         longUrl,
-        shortUrlCode
+        shortUrlCode,
       },
     });
-    console.log("UserUrl", userUrl);
+    // console.log("UserUrl", userUrl);
     return userUrl;
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
@@ -38,4 +34,36 @@ export const addShortUrl = async (
     }
     throw e;
   }
+};
+
+export const createUrlAccessHistory = async (
+  userUrlId: number,
+  accessedBy: string
+) => {
+  await prisma.urlAccessHistory.create({
+    data: {
+      userUrlId,
+      accessedBy,
+    },
+  });
+};
+
+export const getUserUrlStatsByShortUrlCode = async (
+  shortUrlCode: string
+) => {
+  return await prisma.userUrl.findUnique({
+    where: { shortUrlCode },
+    include: {
+      _count: {
+        select: { accessHistory: true },
+      },
+      accessHistory: {
+        select: { accessedAt: true },
+        orderBy: {
+          accessedAt: 'desc',
+        },
+        take: 1,
+      },
+    },
+  });
 };

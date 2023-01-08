@@ -7,18 +7,22 @@ import Router from "koa-router";
 import json from "koa-json";
 import logger from "koa-logger";
 import bodyParser from "koa-bodyparser";
-import { submitUrlController } from "./controllers/url.controller";
+import {
+  submitUrlController,
+  getUrlStatsController,
+  redirectUrlController,
+} from "./controllers/url.controller";
 
-const app = new Koa();
 const router = new Router();
-
-router.get("/health", async (ctx, next) => {
-  ctx.body = { status: 'OK' };
+router.get("/", async (ctx, next) => {
+  ctx.body = "Welcome";
   await next();
 });
-
+router.get("/:shortUrlCode", redirectUrlController);
+router.get("/:shortUrlCode/stats", getUrlStatsController);
 router.post("/submit", submitUrlController);
 
+const app = new Koa();
 app.use(json()).use(logger()).use(bodyParser());
 app.use(router.routes()).use(router.allowedMethods());
 

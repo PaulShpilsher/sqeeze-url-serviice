@@ -8,13 +8,14 @@
   "main": "./dist/index.js",
   "scripts": {
     "lint": "eslint . --ext .ts",
-    "build": "./node_modules/typescript/bin/tsc",
+    "build": "tsc",
     "build:watch": "npm run build -- -w",
     "dev": "nodemon ./src/index.ts",
     "start": "ts-node ./src/index.ts",
     "test": "jest",
     "db:migrate": "npx prisma migrate dev",
-    "db:build": "prisma generate && prisma migrate deploy"
+    "db:build": "prisma generate && prisma migrate deploy",
+    "db:docker": "docker run -itd -e POSTGRES_USER=pusr -e POSTGRES_PASSWORD=psecret -e POSTGRES_DB=sqeeze-url-data -p 5432:5432 -v /data:/var/lib/postgresql/data --name postgresql postgres"
   },
   "dependencies": {
     "@prisma/client": "^4.8.1",
@@ -23,7 +24,6 @@
     "koa-json": "^2.0.2",
     "koa-logger": "^3.2.1",
     "koa-router": "^12.0.0",
-    "nanoid": "^4.0.0",
     "prisma": "^4.8.1"
   },
   "devDependencies": {
